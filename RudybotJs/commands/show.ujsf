@@ -1,0 +1,26 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require('discord.js');
+
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName("show")
+        .setDescription("test")
+        .addUserOption((option) =>
+        option
+            .setName("member")
+            .setDescription("Member to mute!")
+            .setRequired(true)
+        ),
+    async execute(interaction){
+        const member = interaction.options.getMember("member");
+        const embed = new MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle(`${member.user?.username}#${member.user?.discriminator}`)
+            .addFields(
+                { name: "ID", value: `${member.user?.id}`, inline: true},
+                { name: "STATUS", value: `${member.presence.status}`, inline: true },
+            )
+            .setThumbnail(member.user.displayAvatarURL())
+        await interaction.reply({embeds: [embed]});
+    }
+}
